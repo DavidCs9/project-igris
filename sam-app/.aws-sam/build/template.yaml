@@ -8,7 +8,7 @@ Resources:
     Properties:
       Description: A Lambda function that logs the payload of messages sent to an
         associated SQS queue.
-      Runtime: nodejs22.x
+      Runtime: nodejs18.x
       Architectures:
       - x86_64
       Handler: scheduled-event-logger.scheduledEventLoggerHandler
@@ -17,7 +17,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: cron(0 * * * ? *)
-      MemorySize: 128
+      MemorySize: 1024
       Timeout: 100
       CodeUri: ScheduledEventLogger
       Environment:
@@ -28,9 +28,11 @@ Resources:
       BuildProperties:
         EntryPoints:
         - src/handlers/scheduled-event-logger.ts
+        External:
+        - '@sparticuz/chromium'
         Minify: true
         Sourcemap: true
-        Target: node22
+        Target: node18
       SamResourceId: ScheduledEventLogger
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group

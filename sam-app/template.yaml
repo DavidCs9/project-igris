@@ -7,6 +7,20 @@ Transform:
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
+  ChromiumLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: Chromium with Node.js integration for AWS Lambda
+      ContentUri: layers/chromium
+      CompatibleRuntimes:
+        - &nodejsRuntime nodejs18.x
+      # Chromium doesn't currently have ARM support; see https://github.com/Sparticuz/chromium#can-i-use-arm-or-graviton-instances
+      CompatibleArchitectures:
+        - &chromiumArch x86_64
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: *nodejsRuntime
+      BuildArchitecture: *chromiumArch
   # This is the Lambda function definition associated with the source code: sqs-payload-logger.js. For all available properties, see
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   ScheduledEventLogger:
@@ -15,9 +29,11 @@ Resources:
       Description:
         A Lambda function that logs the payload of messages sent to an
         associated SQS queue.
-      Runtime: nodejs22.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
+      Layers:
+        - !Ref ChromiumLayer
       Handler: dist/handlers/scheduled-event-logger.scheduledEventLoggerHandler
       # This property associates this Lambda function with a scheduled CloudWatch Event. For all available properties, see
       # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
@@ -27,14 +43,16 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: cron(0 * * * ? *)
-      MemorySize: 128
+      MemorySize: 1024
       Timeout: 100
       CodeUri: ./
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
+        External: # <-- Add this property
+          - "@sparticuz/chromium" # <-- List the package(s) to exclude from bundling
         Minify: true
-        Target: "node22"
+        Target: "node18"
         Sourcemap: true
         EntryPoints:
           - src/handlers/scheduled-event-logger.ts

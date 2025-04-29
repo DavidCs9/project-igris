@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "sources": ["../../../../../../../../private/var/folders/73/n62_8ryx3qz4_xtzgzrrmp800000gn/T/tmpxkfnq9sd/src/handlers/scheduled-event-logger.ts"],
-  "sourcesContent": ["import { ScheduledEvent } from \"aws-lambda\";\n\n/**\n * A Lambda function that logs the payload received from a CloudWatch scheduled event.\n */\nexport const scheduledEventLoggerHandler = async (\n  event: ScheduledEvent,\n  context: any\n): Promise<string> => {\n  // All log statements are written to CloudWatch by default. For more information, see\n  // https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-logging.html\n  return \"hello world\";\n};\n"],
-  "mappings": "yaAAA,IAAAA,EAAA,GAAAC,EAAAD,EAAA,iCAAAE,IAAA,eAAAC,EAAAH,GAKO,IAAME,EAA8B,MACzCE,EACAC,IAIO",
+  "sources": ["../../../../../../../../private/var/folders/73/n62_8ryx3qz4_xtzgzrrmp800000gn/T/tmpdrqju57k/src/handlers/scheduled-event-logger.ts"],
+  "sourcesContent": ["import { ScheduledEvent } from \"aws-lambda\";\n\n/**\n * A Lambda function that logs the payload received from a CloudWatch scheduled event.\n */\nexport const scheduledEventLoggerHandler = async (\n  event: ScheduledEvent,\n  context: any\n): Promise<{ result: string; browserVersion: string; pageTitle: string }> => {\n  return {\n    result: \"hello world\",\n    browserVersion: \"1.0.0\",\n    pageTitle: \"hello world\",\n  };\n};\n"],
+  "mappings": "yaAAA,IAAAA,EAAA,GAAAC,EAAAD,EAAA,iCAAAE,IAAA,eAAAC,EAAAH,GAKO,IAAME,EAA8B,MACzCE,EACAC,KAEO,CACL,OAAQ,cACR,eAAgB,QAChB,UAAW,aACb",
   "names": ["scheduled_event_logger_exports", "__export", "scheduledEventLoggerHandler", "__toCommonJS", "event", "context"]
 }
